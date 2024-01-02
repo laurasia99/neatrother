@@ -87,6 +87,12 @@ $(_ZIP):
     if not exist $(@D) mkdir $(@D)
     do-curl $@ $(URL)
 
+!IF !EXIST($F)
+!IF [mkdir $F] != 0
+!ERROR Build error: mkdir $F
+!ENDIF
+!ENDIF
+
 # I tend to avoid implicit rules, preferring instead explicit rules.
 # However, they work well in this situation.
 
@@ -102,10 +108,16 @@ $(_ZIP):
 # The final challenge is to force the ZIP expansion and download.
 # Just use the first target (cmb10), relying on nmake processing
 # all targets in order
+#
+# Unfortunately these targets are 'noisy', and create a lot of
+# unnecessary output. So make them conditional - if the
+# first file exist, assume they all exist
 
+!IF !EXIST($(_R)\fonts\afm\public\amsfonts\cm\cmb10.afm) || DEFINED(FORCE_UNZIP)
 $(_R)\fonts\afm\public\amsfonts\cm\cmb10.afm \
 $(_R)\fonts\type1\public\amsfonts\cm\cmb10.pfb: $(_ZIP)
     if not exist $(_R) do-unzip $(_ZIP) $(_R)
+!ENDIF
 
 # It's handy to have a target that just forces the unzipping
 unzip:: $(_ZIP)

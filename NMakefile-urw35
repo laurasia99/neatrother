@@ -88,6 +88,12 @@ $(_ZIP):
     if not exist $(@D) mkdir $(@D)
     do-curl $@ $(URL)
 
+!IF !EXIST($F)
+!IF [mkdir $F] != 0
+!ERROR Build error: mkdir $F
+!ENDIF
+!ENDIF
+
 $F\C059-BdIta.ttf: $(_D)\$(@F)
     copy $(_D)\$(@F) $@
 $F\C059-Bold.ttf: $(_D)\$(@F)
@@ -162,7 +168,12 @@ $F\Z003-MediumItalic.ttf: $(_D)\$(@F)
 # These targets aren't all necessary - one should be sufficient
 # for the extration. However listing them all explicitly allows
 # completeness to be checked.
+#
+# Unfortunately these targets are 'noisy', and create a lot of
+# unnecessary output. So make them conditional - if the
+# first file exist, assume they all exist
 
+!IF !EXIST($(_D)\C059-BdIta.ttf) || DEFINED(FORCE_UNZIP)
 $(_D)\C059-BdIta.ttf \
 $(_D)\C059-Bold.ttf \
 $(_D)\C059-Italic.ttf \
@@ -199,8 +210,9 @@ $(_D)\URWGothic-Demi.ttf \
 $(_D)\URWGothic-DemiOblique.ttf \
 $(_D)\Z003-MediumItalic.ttf: $(_ZIP)
     if not exist $(_D) do-unzip $(_ZIP) $O
+!ENDIF
 
-# It's handy to have a target that just forces the unzipping
+# It's handy to have a target that just forces the unzipping,
 unzip:: $(_ZIP)
     if not exist $(_D) do-unzip $(_ZIP) $O
 
