@@ -28,8 +28,8 @@ URL=https://www.ams.org/arc/tex/amsfonts.zip
 
 _ZIP=$O\ams.zip
 
-# Default root directory (inside ZIP archive)
-_R=$O\fonts
+# Default root directory (ZIP archive unpacked into $(_R))
+_R=$O\ams
 
 # Note that both the .afm and .t1 need to be installed
 AFM=$F\cmb10.afm $F\cmbsy10.afm $F\cmbx10.afm $F\cmbx12.afm \
@@ -71,11 +71,20 @@ PFB=$F\cmb10.pfb $F\cmbsy10.pfb $F\cmbx10.pfb $F\cmbx12.pfb \
 
 all:: $(AFM) $(PFB)
 
+download:: $(_ZIP)
+
 clean::
-	del /Q $(_ZIP)
-    if exist $(_E) rmdir /s /q $(_E)
+    if exist $(_R) rmdir /s /q $(_R)
+
+clean-fonts::
+    -del /Q $(AFM) $(PFB)
+
+# Remove files installed into fonts/
+scrub:: clean clean-fonts
+	if exist $(_ZIP) del $(_ZIP)
 
 $(_ZIP):
+    if not exist $(@D) mkdir $(@D)
     do-curl $@ $(URL)
 
 # I tend to avoid implicit rules, preferring instead explicit rules.
@@ -84,18 +93,22 @@ $(_ZIP):
 .SUFFIXES:
 .SUFFIXES: .afm .pfb
 
-{$(_R)\afm\public\amsfonts\cm}.afm{$F}.afm:
+{$(_R)\fonts\afm\public\amsfonts\cm}.afm{$F}.afm:
     copy /y $< $@
 
-{$(_R)\type1\public\amsfonts\cm}.pfb{$F}.pfb:
+{$(_R)\fonts\type1\public\amsfonts\cm}.pfb{$F}.pfb:
     copy /y $< $@
 
 # The final challenge is to force the ZIP expansion and download.
 # Just use the first target (cmb10), relying on nmake processing
 # all targets in order
 
-$(_R)\afm\public\amsfonts\cm\cmb10.afm \
-$(_R)\type1\public\amsfonts\cm\cmb10.pfb: $(_ZIP)
-    if not exist $(_R) do-unzip $(_ZIP) $O
+$(_R)\fonts\afm\public\amsfonts\cm\cmb10.afm \
+$(_R)\fonts\type1\public\amsfonts\cm\cmb10.pfb: $(_ZIP)
+    if not exist $(_R) do-unzip $(_ZIP) $(_R)
+
+# It's handy to have a target that just forces the unzipping
+unzip:: $(_ZIP)
+    if not exist $(_R)\fonts do-unzip $(_ZIP) $(_R)
 
 !ENDIF

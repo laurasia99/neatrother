@@ -26,4 +26,14 @@ S = $(_S1)\pdfbb
 O = $(_O1)
 S = $(_S1)
 
+# Always fetch & populate the URW-35 (base Type 2 fonts)
+!INCLUDE NMakefile-urw35
+
+# ...however allow AMS/Computer Modern to be excluded...
+# (they are included by default)
+
+!IFNDEF NO_AMS_FONTS
+!INCLUDE NMakefile-ams
+!ENDIF
+
 !ENDIF

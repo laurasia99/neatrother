@@ -17,7 +17,8 @@ all:: pdfbb.exe
 pdfbb.exe: $(OBJS)
 	$(CC) /Fe:$@ $(OBJS) $(LDFLAGS)
 clean::
-	-del /Q $(OBJS) pdfbb.exe
+	-del /Q $(OBJS)
+    if exist pdfbb.exe del pdfbb.exe
 
 #
 $O:

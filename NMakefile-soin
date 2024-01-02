@@ -17,7 +17,8 @@ all:: soin.exe
 soin.exe: $(OBJS)
 	$(CC) /Fe:$@ $(OBJS) $(LDFLAGS)
 clean::
-	-del /Q $(OBJS) soin.exe
+	-del /Q $(OBJS)
+    if exist soin.exe del soin.exe
 
 #
 $O:

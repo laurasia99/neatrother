@@ -73,11 +73,19 @@ FONTS=$F\C059-BdIta.ttf \
 
 all:: $(FONTS)
 
+download:: $(_ZIP)
+
 clean::
-	del /Q $(_ZIP)
     if exist $(_R) rmdir /s /q $(_R)
 
+clean-fonts::
+    -del /Q $(FONTS)
+
+scrub:: clean clean-fonts
+	if exist $(_ZIP) del $(_ZIP)
+
 $(_ZIP):
+    if not exist $(@D) mkdir $(@D)
     do-curl $@ $(URL)
 
 $F\C059-BdIta.ttf: $(_D)\$(@F)
@@ -95,7 +103,7 @@ $F\NimbusMonoPS-Bold.ttf: $(_D)\$(@F)
 $F\NimbusMonoPS-BoldItalic.ttf: $(_D)\$(@F)
     copy $(_D)\$(@F) $@
 $F\NimbusMonoPS-Italic.ttf: $(_D)\$(@F)
-    copy $(_D)\$(@F) $@ic.ttf
+    copy $(_D)\$(@F) $@
 $F\NimbusMonoPS-Regular.ttf: $(_D)\$(@F)
     copy $(_D)\$(@F) $@
 $F\NimbusRoman-Bold.ttf: $(_D)\$(@F)
@@ -190,6 +198,10 @@ $(_D)\URWGothic-BookOblique.ttf \
 $(_D)\URWGothic-Demi.ttf \
 $(_D)\URWGothic-DemiOblique.ttf \
 $(_D)\Z003-MediumItalic.ttf: $(_ZIP)
+    if not exist $(_D) do-unzip $(_ZIP) $O
+
+# It's handy to have a target that just forces the unzipping
+unzip:: $(_ZIP)
     if not exist $(_D) do-unzip $(_ZIP) $O
 
 !ENDIF
