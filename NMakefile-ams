@@ -1,0 +1,101 @@
+!IFNDEF _NMAKE_AMS_INCLUDED
+_NMAKE_AMS_INCLUDED=1
+
+# Assumes curl, tar (or equivalents) are installed and accessible from the
+# command line (i.e. in the system PATH). The following batch files perform
+# the tests:
+#       do-curl <out-file> <url>
+#       do-unzip <file.zip> <directory>
+#
+# Modify these to suit your environment. You can use 'where' from the
+# command line to check if an executable file exists.
+#
+# Note that recent builds of Windows 10 (from 2018) include both curl.exe
+# and tar.exe:
+# https://devblogs.microsoft.com/commandline/tar-and-curl-come-to-windows/
+
+# Store downloaded ZIP file in obj/
+!IFNDEF O
+O=.\obj
+!ENDIF
+
+# Extract fonts into font/
+!IFNDEF F
+F=.\fonts
+!ENDIF
+
+URL=https://www.ams.org/arc/tex/amsfonts.zip
+
+_ZIP=$O\ams.zip
+
+# Default root directory (inside ZIP archive)
+_R=$O\fonts
+
+# Note that both the .afm and .t1 need to be installed
+AFM=$F\cmb10.afm $F\cmbsy10.afm $F\cmbx10.afm $F\cmbx12.afm \
+    $F\cmbx5.afm $F\cmbx6.afm $F\cmbx7.afm $F\cmbx8.afm $F\cmbx9.afm \
+    $F\cmbxsl10.afm $F\cmbxti10.afm $F\cmcsc10.afm $F\cmdunh10.afm \
+    $F\cmex10.afm $F\cmff10.afm $F\cmfi10.afm $F\cmfib8.afm $F\cminch.afm \
+    $F\cmitt10.afm $F\cmmi10.afm $F\cmmi12.afm $F\cmmi5.afm $F\cmmi6.afm \
+    $F\cmmi7.afm $F\cmmi8.afm $F\cmmi9.afm $F\cmmib10.afm $F\cmr10.afm \
+    $F\cmr12.afm $F\cmr17.afm $F\cmr5.afm $F\cmr6.afm $F\cmr7.afm \
+    $F\cmr8.afm $F\cmr9.afm $F\cmsl10.afm $F\cmsl12.afm $F\cmsl8.afm \
+    $F\cmsl9.afm $F\cmsltt10.afm $F\cmss10.afm $F\cmss12.afm $F\cmss17.afm \
+    $F\cmss8.afm $F\cmss9.afm $F\cmssbx10.afm $F\cmssdc10.afm $F\cmssi10.afm \
+    $F\cmssi12.afm $F\cmssi17.afm $F\cmssi8.afm $F\cmssi9.afm $F\cmssq8.afm \
+    $F\cmssqi8.afm $F\cmsy10.afm $F\cmsy5.afm $F\cmsy6.afm $F\cmsy7.afm \
+    $F\cmsy8.afm $F\cmsy9.afm $F\cmtcsc10.afm $F\cmtex10.afm $F\cmtex8.afm \
+    $F\cmtex9.afm $F\cmti10.afm $F\cmti12.afm $F\cmti7.afm $F\cmti8.afm \
+    $F\cmti9.afm $F\cmtt10.afm $F\cmtt12.afm $F\cmtt8.afm $F\cmtt9.afm \
+    $F\cmu10.afm $F\cmvtt10.afm
+
+# Newer versions of NMake allow $(subst...) substitutions; however I don't
+# know how to test for this - and also have the older version!
+# Hence the explicit definition of $(PFB)...
+PFB=$F\cmb10.pfb $F\cmbsy10.pfb $F\cmbx10.pfb $F\cmbx12.pfb \
+    $F\cmbx5.pfb $F\cmbx6.pfb $F\cmbx7.pfb $F\cmbx8.pfb $F\cmbx9.pfb \
+    $F\cmbxsl10.pfb $F\cmbxti10.pfb $F\cmcsc10.pfb $F\cmdunh10.pfb \
+    $F\cmex10.pfb $F\cmff10.pfb $F\cmfi10.pfb $F\cmfib8.pfb $F\cminch.pfb \
+    $F\cmitt10.pfb $F\cmmi10.pfb $F\cmmi12.pfb $F\cmmi5.pfb $F\cmmi6.pfb \
+    $F\cmmi7.pfb $F\cmmi8.pfb $F\cmmi9.pfb $F\cmmib10.pfb $F\cmr10.pfb \
+    $F\cmr12.pfb $F\cmr17.pfb $F\cmr5.pfb $F\cmr6.pfb $F\cmr7.pfb \
+    $F\cmr8.pfb $F\cmr9.pfb $F\cmsl10.pfb $F\cmsl12.pfb $F\cmsl8.pfb \
+    $F\cmsl9.pfb $F\cmsltt10.pfb $F\cmss10.pfb $F\cmss12.pfb $F\cmss17.pfb \
+    $F\cmss8.pfb $F\cmss9.pfb $F\cmssbx10.pfb $F\cmssdc10.pfb $F\cmssi10.pfb \
+    $F\cmssi12.pfb $F\cmssi17.pfb $F\cmssi8.pfb $F\cmssi9.pfb $F\cmssq8.pfb \
+    $F\cmssqi8.pfb $F\cmsy10.pfb $F\cmsy5.pfb $F\cmsy6.pfb $F\cmsy7.pfb \
+    $F\cmsy8.pfb $F\cmsy9.pfb $F\cmtcsc10.pfb $F\cmtex10.pfb $F\cmtex8.pfb \
+    $F\cmtex9.pfb $F\cmti10.pfb $F\cmti12.pfb $F\cmti7.pfb $F\cmti8.pfb \
+    $F\cmti9.pfb $F\cmtt10.pfb $F\cmtt12.pfb $F\cmtt8.pfb $F\cmtt9.pfb \
+    $F\cmu10.pfb $F\cmvtt10.pfb
+
+all:: $(AFM) $(PFB)
+
+clean::
+	del /Q $(_ZIP)
+    if exist $(_E) rmdir /s /q $(_E)
+
+$(_ZIP):
+    do-curl $@ $(URL)
+
+# I tend to avoid implicit rules, preferring instead explicit rules.
+# However, they work well in this situation.
+
+.SUFFIXES:
+.SUFFIXES: .afm .pfb
+
+{$(_R)\afm\public\amsfonts\cm}.afm{$F}.afm:
+    copy /y $< $@
+
+{$(_R)\type1\public\amsfonts\cm}.pfb{$F}.pfb:
+    copy /y $< $@
+
+# The final challenge is to force the ZIP expansion and download.
+# Just use the first target (cmb10), relying on nmake processing
+# all targets in order
+
+$(_R)\afm\public\amsfonts\cm\cmb10.afm \
+$(_R)\type1\public\amsfonts\cm\cmb10.pfb: $(_ZIP)
+    if not exist $(_R) do-unzip $(_ZIP) $O
+
+!ENDIF

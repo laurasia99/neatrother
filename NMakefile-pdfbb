@@ -1,0 +1,28 @@
+!IFNDEF _NMAKE_PDFBB_INCLUDED
+_NMAKE_PDFBB_INCLUDED=1
+
+!IFNDEF O
+O=obj
+!ENDIF
+!IFNDEF S
+S=.
+!ENDIF
+
+CC = cl
+CFLAGS = /nologo /O2 /D_CRT_SECURE_NO_WARNINGS
+LDFLAGS = /nologo
+OBJS = $O\pdfbb.obj
+
+all:: pdfbb.exe
+pdfbb.exe: $(OBJS)
+	$(CC) /Fe:$@ $(OBJS) $(LDFLAGS)
+clean::
+	-del /Q $(OBJS) pdfbb.exe
+
+#
+$O:
+    if not exist $O mkdir $O
+$O\pdfbb.obj: $O $S\pdfbb.c
+	$(CC) /c /Fo:$@ $(CFLAGS) $S\$(@B).c
+
+!ENDIF

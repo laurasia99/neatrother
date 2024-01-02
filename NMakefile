@@ -18,6 +18,10 @@ O = $(_O1)\soin
 S = $(_S1)\soin
 !INCLUDE NMakefile-soin
 
+O = $(_O1)\pdfbb
+S = $(_S1)\pdfbb
+!INCLUDE NMakefile-pdfbb
+
 # Restore
 O = $(_O1)
 S = $(_S1)

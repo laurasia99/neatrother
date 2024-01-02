@@ -1,0 +1,195 @@
+!IFNDEF _NMAKE_URW35_INCLUDED
+_NMAKE_URW35_INCLUDED=1
+
+# Assumes curl, tar (or equivalents) are installed and accessible from the
+# command line (i.e. in the system PATH). The following batch files perform
+# the tests:
+#       do-curl <out-file> <url>
+#       do-unzip <file.zip> <directory>
+#
+# Modify these to suit your environment. You can use 'where' from the
+# command line to check if an executable file exists.
+#
+# Note that recent builds of Windows 10 (from 2018) include both curl.exe
+# and tar.exe:
+# https://devblogs.microsoft.com/commandline/tar-and-curl-come-to-windows/
+
+# Store downloaded ZIP file in obj/
+!IFNDEF O
+O=.\obj
+!ENDIF
+
+# Extract fonts into font/
+!IFNDEF F
+F=.\fonts
+!ENDIF
+
+URL=https://codeload.github.com/ArtifexSoftware/urw-base35-fonts/zip/refs/tags/20200910
+
+_ZIP=$O\urw35.zip
+
+# Default root directory (inside ZIP archive)
+_R=$O\urw-base35-fonts-20200910
+_D=$(_R)\fonts
+
+# 2020 release of URW fonts provides both type-1 and OpenType/TrueType files
+# Use the TrueType files
+
+FONTS=$F\C059-BdIta.ttf \
+    $F\C059-Bold.ttf \
+    $F\C059-Italic.ttf \
+    $F\C059-Roman.ttf \
+    $F\D050000L.ttf \
+    $F\NimbusMonoPS-Bold.ttf \
+    $F\NimbusMonoPS-BoldItalic.ttf \
+    $F\NimbusMonoPS-Italic.ttf \
+    $F\NimbusMonoPS-Regular.ttf \
+    $F\NimbusRoman-Bold.ttf \
+    $F\NimbusRoman-BoldItalic.ttf \
+    $F\NimbusRoman-Italic.ttf \
+    $F\NimbusRoman-Regular.ttf \
+    $F\NimbusSans-Bold.ttf \
+    $F\NimbusSans-BoldItalic.ttf \
+    $F\NimbusSans-Italic.ttf \
+    $F\NimbusSans-Regular.ttf \
+    $F\NimbusSansNarrow-Bold.ttf \
+    $F\NimbusSansNarrow-BoldOblique.ttf \
+    $F\NimbusSansNarrow-Oblique.ttf \
+    $F\NimbusSansNarrow-Regular.ttf \
+    $F\P052-Bold.ttf \
+    $F\P052-BoldItalic.ttf \
+    $F\P052-Italic.ttf \
+    $F\P052-Roman.ttf \
+    $F\StandardSymbolsPS.ttf \
+    $F\URWBookman-Demi.ttf \
+    $F\URWBookman-DemiItalic.ttf \
+    $F\URWBookman-Light.ttf \
+    $F\URWBookman-LightItalic.ttf \
+    $F\URWGothic-Book.ttf \
+    $F\URWGothic-BookOblique.ttf \
+    $F\URWGothic-Demi.ttf \
+    $F\URWGothic-DemiOblique.ttf \
+    $F\Z003-MediumItalic.ttf
+
+all:: $(FONTS)
+
+clean::
+	del /Q $(_ZIP)
+    if exist $(_R) rmdir /s /q $(_R)
+
+$(_ZIP):
+    do-curl $@ $(URL)
+
+$F\C059-BdIta.ttf: $(_D)\$(@F)
+    copy $(_D)\$(@F) $@
+$F\C059-Bold.ttf: $(_D)\$(@F)
+    copy $(_D)\$(@F) $@
+$F\C059-Italic.ttf: $(_D)\$(@F)
+    copy $(_D)\$(@F) $@
+$F\C059-Roman.ttf: $(_D)\$(@F)
+    copy $(_D)\$(@F) $@
+$F\D050000L.ttf: $(_D)\$(@F)
+    copy $(_D)\$(@F) $@
+$F\NimbusMonoPS-Bold.ttf: $(_D)\$(@F)
+    copy $(_D)\$(@F) $@
+$F\NimbusMonoPS-BoldItalic.ttf: $(_D)\$(@F)
+    copy $(_D)\$(@F) $@
+$F\NimbusMonoPS-Italic.ttf: $(_D)\$(@F)
+    copy $(_D)\$(@F) $@ic.ttf
+$F\NimbusMonoPS-Regular.ttf: $(_D)\$(@F)
+    copy $(_D)\$(@F) $@
+$F\NimbusRoman-Bold.ttf: $(_D)\$(@F)
+    copy $(_D)\$(@F) $@
+$F\NimbusRoman-BoldItalic.ttf: $(_D)\$(@F)
+    copy $(_D)\$(@F) $@
+$F\NimbusRoman-Italic.ttf: $(_D)\$(@F)
+    copy $(_D)\$(@F) $@
+$F\NimbusRoman-Regular.ttf: $(_D)\$(@F)
+    copy $(_D)\$(@F) $@
+$F\NimbusSans-Bold.ttf: $(_D)\$(@F)
+    copy $(_D)\$(@F) $@
+$F\NimbusSans-BoldItalic.ttf: $(_D)\$(@F)
+    copy $(_D)\$(@F) $@
+$F\NimbusSans-Italic.ttf: $(_D)\$(@F)
+    copy $(_D)\$(@F) $@
+$F\NimbusSans-Regular.ttf: $(_D)\$(@F)
+    copy $(_D)\$(@F) $@
+$F\NimbusSansNarrow-Bold.ttf: $(_D)\$(@F)
+    copy $(_D)\$(@F) $@
+$F\NimbusSansNarrow-BoldOblique.ttf: $(_D)\$(@F)
+    copy $(_D)\$(@F) $@
+$F\NimbusSansNarrow-Oblique.ttf: $(_D)\$(@F)
+    copy $(_D)\$(@F) $@
+$F\NimbusSansNarrow-Regular.ttf: $(_D)\$(@F)
+    copy $(_D)\$(@F) $@
+$F\P052-Bold.ttf: $(_D)\$(@F)
+    copy $(_D)\$(@F) $@
+$F\P052-BoldItalic.ttf: $(_D)\$(@F)
+    copy $(_D)\$(@F) $@
+$F\P052-Italic.ttf: $(_D)\$(@F)
+    copy $(_D)\$(@F) $@
+$F\P052-Roman.ttf: $(_D)\$(@F)
+    copy $(_D)\$(@F) $@
+$F\StandardSymbolsPS.ttf: $(_D)\$(@F)
+    copy $(_D)\$(@F) $@
+$F\URWBookman-Demi.ttf: $(_D)\$(@F)
+    copy $(_D)\$(@F) $@
+$F\URWBookman-DemiItalic.ttf: $(_D)\$(@F)
+    copy $(_D)\$(@F) $@
+$F\URWBookman-Light.ttf: $(_D)\$(@F)
+    copy $(_D)\$(@F) $@
+$F\URWBookman-LightItalic.ttf: $(_D)\$(@F)
+    copy $(_D)\$(@F) $@
+$F\URWGothic-Book.ttf: $(_D)\$(@F)
+    copy $(_D)\$(@F) $@
+$F\URWGothic-BookOblique.ttf: $(_D)\$(@F)
+    copy $(_D)\$(@F) $@
+$F\URWGothic-Demi.ttf: $(_D)\$(@F)
+    copy $(_D)\$(@F) $@
+$F\URWGothic-DemiOblique.ttf: $(_D)\$(@F)
+    copy $(_D)\$(@F) $@
+$F\Z003-MediumItalic.ttf: $(_D)\$(@F)
+    copy $(_D)\$(@F) $@
+
+# These targets aren't all necessary - one should be sufficient
+# for the extration. However listing them all explicitly allows
+# completeness to be checked.
+
+$(_D)\C059-BdIta.ttf \
+$(_D)\C059-Bold.ttf \
+$(_D)\C059-Italic.ttf \
+$(_D)\C059-Roman.ttf \
+$(_D)\D050000L.ttf \
+$(_D)\NimbusMonoPS-Bold.ttf \
+$(_D)\NimbusMonoPS-BoldItalic.ttf \
+$(_D)\NimbusMonoPS-Italic.ttf \
+$(_D)\NimbusMonoPS-Regular.ttf \
+$(_D)\NimbusRoman-Bold.ttf \
+$(_D)\NimbusRoman-BoldItalic.ttf \
+$(_D)\NimbusRoman-Italic.ttf \
+$(_D)\NimbusRoman-Regular.ttf \
+$(_D)\NimbusSans-Bold.ttf \
+$(_D)\NimbusSans-BoldItalic.ttf \
+$(_D)\NimbusSans-Italic.ttf \
+$(_D)\NimbusSans-Regular.ttf \
+$(_D)\NimbusSansNarrow-Bold.ttf \
+$(_D)\NimbusSansNarrow-BoldOblique.ttf \
+$(_D)\NimbusSansNarrow-Oblique.ttf \
+$(_D)\NimbusSansNarrow-Regular.ttf \
+$(_D)\P052-Bold.ttf \
+$(_D)\P052-BoldItalic.ttf \
+$(_D)\P052-Italic.ttf \
+$(_D)\P052-Roman.ttf \
+$(_D)\StandardSymbolsPS.ttf \
+$(_D)\URWBookman-Demi.ttf \
+$(_D)\URWBookman-DemiItalic.ttf \
+$(_D)\URWBookman-Light.ttf \
+$(_D)\URWBookman-LightItalic.ttf \
+$(_D)\URWGothic-Book.ttf \
+$(_D)\URWGothic-BookOblique.ttf \
+$(_D)\URWGothic-Demi.ttf \
+$(_D)\URWGothic-DemiOblique.ttf \
+$(_D)\Z003-MediumItalic.ttf: $(_ZIP)
+    if not exist $(_D) do-unzip $(_ZIP) $O
+
+!ENDIF
