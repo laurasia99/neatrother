@@ -1,6 +1,30 @@
 !IFNDEF _NMAKE_OTHER_INCLUDED
 _NMAKE_OTHER_INCLUDED=1
 
+# winroff\NMakefile-local allows configuration of included fonts.
+# Use 'ifdef O' to determine if this is a stand-alone build or not,
+# and if standalone, force inclusion of URW35 fonts, but not the
+# AMS fonts (Computer Modern)
+
+!IFNDEF O
+# Assume stand-alone build; default URW35
+!IFNDEF USE_URW35_FONTS
+USE_URW35_FONTS = 1
+!ENDIF
+!ENDIF
+
+!IFDEF USE_URW35_FONTS
+!IF $(USE_URW35_FONTS) > 0
+!INCLUDE NMakefile-urw35
+!ENDIF
+!ENDIF
+
+!IFDEF USE_AMS_FONTS
+!IF $(USE_AMS_FONTS) > 0
+!INCLUDE NMakefile-ams
+!ENDIF
+!ENDIF
+
 # Preserve original $O $S (relative paths) if set
 !IFDEF O
 _O1 = $O
@@ -25,15 +49,5 @@ S = $(_S1)\pdfbb
 # Restore
 O = $(_O1)
 S = $(_S1)
-
-# Always fetch & populate the URW-35 (base Type 2 fonts)
-!INCLUDE NMakefile-urw35
-
-# ...however allow AMS/Computer Modern to be excluded...
-# (they are included by default)
-
-!IFNDEF NO_AMS_FONTS
-!INCLUDE NMakefile-ams
-!ENDIF
 
 !ENDIF
