@@ -1,0 +1,28 @@
+!IFNDEF _NMAKE_SOIN_INCLUDED
+_NMAKE_SOIN_INCLUDED=1
+
+!IFNDEF O
+O=obj
+!ENDIF
+!IFNDEF S
+S=.
+!ENDIF
+
+CC = cl
+CFLAGS = /nologo /O2 /D_CRT_SECURE_NO_WARNINGS
+LDFLAGS = /nologo
+OBJS = $O\soin.obj
+
+all:: soin.exe
+soin.exe: $(OBJS)
+	$(CC) /Fe:$@ $(OBJS) $(LDFLAGS)
+clean::
+	-del /Q $(OBJS) soin.exe
+
+#
+$O:
+    if not exist $O mkdir $O
+$O\soin.obj: $O $S\soin.c
+	$(CC) /c /Fo:$@ $(CFLAGS) $S\$(@B).c
+
+!ENDIF

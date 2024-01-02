@@ -1,0 +1,25 @@
+!IFNDEF _NMAKE_OTHER_INCLUDED
+_NMAKE_OTHER_INCLUDED=1
+
+# Preserve original $O $S (relative paths) if set
+!IFDEF O
+_O1 = $O
+!ELSE
+_O1 = .\obj
+!ENDIF
+
+!IFDEF S
+_S1 = $S
+!ELSE
+_S1 = .
+!ENDIF
+
+O = $(_O1)\soin
+S = $(_S1)\soin
+!INCLUDE NMakefile-soin
+
+# Restore
+O = $(_O1)
+S = $(_S1)
+
+!ENDIF
