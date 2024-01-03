@@ -37,8 +37,8 @@ _D=$(_R)\fonts
 # Use the Type-1 files (afm, pfb)
 !IF 1
 FONTS=$F\C059-BdIta.t1 \
-    $F\C059-Bold.t1 \
     $F\C059-BdIta.afm \
+    $F\C059-Bold.t1 \
     $F\C059-Bold.afm \
     $F\C059-Italic.afm \
     $F\C059-Italic.t1 \
@@ -258,14 +258,16 @@ $F\Z003-MediumItalic.ttf: $(_D)\$(@F)
 
 # These targets aren't all necessary - one should be sufficient
 # for the extration. However listing them all explicitly allows
-# completeness to be checked.
+# completeness to be checked (only done for the .ttf files;
+# exclude all of the .afm for simplicity).
 #
 # Unfortunately these targets are 'noisy', and create a lot of
 # unnecessary output. So make them conditional - if the
 # first file exist, assume they all exist
 
-!IF !EXIST($(_D)\C059-BdIta.ttf) || DEFINED(FORCE_UNZIP)
+!IF (!EXIST($(_D)\C059-BdIta.ttf) && !EXISTS($(_D)\C059-BdIta.afm)) || DEFINED(FORCE_UNZIP)
 $(_D)\C059-BdIta.ttf \
+$(_D)\C059-BdIta.afm \
 $(_D)\C059-Bold.ttf \
 $(_D)\C059-Italic.ttf \
 $(_D)\C059-Roman.ttf \
