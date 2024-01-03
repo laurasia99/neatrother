@@ -89,12 +89,10 @@ static FILE *fsearch(char *filepath)
 		int i,j,k;
 		FILE *f;
 		for(i=0;dirpaths[i];++i) {
-fprintf(stderr,"dirpath[%d]=%s\n",i,dirpaths[i]);
 			for(j=0;dirpaths[i][j];++j) fpath[j]=dirpaths[i][j];
 			if(!issep(fpath[j-1])) fpath[j++]='\\';
 			for(k=0;filepath[k];++k) fpath[j++]=filepath[k];
 			fpath[j]='\0';
-fprintf(stderr,"Trying: %s\n",fpath);
 			if((f=fopen(fpath,"rt"))) return f;
 		}
 	}

@@ -32,9 +32,84 @@ _ZIP=$O\urw35.zip
 _R=$O\urw-base35-fonts-20200910
 _D=$(_R)\fonts
 
-# 2020 release of URW fonts provides both type-1 and OpenType/TrueType files
-# Use the TrueType files
+# 2020 release of URW fonts provides both Type-1 and OpenType/TrueType files
 
+# Use the Type-1 files (afm, pfb)
+!IF 1
+FONTS=$F\C059-BdIta.t1 \
+    $F\C059-Bold.t1 \
+    $F\C059-BdIta.afm \
+    $F\C059-Bold.afm \
+    $F\C059-Italic.afm \
+    $F\C059-Italic.t1 \
+    $F\C059-Roman.afm \
+    $F\C059-Roman.t1 \
+    $F\D050000L.afm \
+    $F\D050000L.t1 \
+    $F\NimbusMonoPS-Bold.afm \
+    $F\NimbusMonoPS-Bold.t1 \
+    $F\NimbusMonoPS-BoldItalic.afm \
+    $F\NimbusMonoPS-BoldItalic.t1 \
+    $F\NimbusMonoPS-Italic.afm \
+    $F\NimbusMonoPS-Italic.t1 \
+    $F\NimbusMonoPS-Regular.afm \
+    $F\NimbusMonoPS-Regular.t1 \
+    $F\NimbusRoman-Bold.afm \
+    $F\NimbusRoman-Bold.t1 \
+    $F\NimbusRoman-BoldItalic.afm \
+    $F\NimbusRoman-BoldItalic.t1 \
+    $F\NimbusRoman-Italic.afm \
+    $F\NimbusRoman-Italic.t1 \
+    $F\NimbusRoman-Regular.afm \
+    $F\NimbusRoman-Regular.t1 \
+    $F\NimbusSans-Bold.afm \
+    $F\NimbusSans-Bold.t1 \
+    $F\NimbusSans-BoldItalic.afm \
+    $F\NimbusSans-BoldItalic.t1 \
+    $F\NimbusSans-Italic.afm \
+    $F\NimbusSans-Italic.t1 \
+    $F\NimbusSans-Regular.afm \
+    $F\NimbusSans-Regular.t1 \
+    $F\NimbusSansNarrow-Bold.afm \
+    $F\NimbusSansNarrow-Bold.t1 \
+    $F\NimbusSansNarrow-BoldOblique.afm \
+    $F\NimbusSansNarrow-BoldOblique.t1 \
+    $F\NimbusSansNarrow-Oblique.afm \
+    $F\NimbusSansNarrow-Oblique.t1 \
+    $F\NimbusSansNarrow-Regular.afm \
+    $F\NimbusSansNarrow-Regular.t1 \
+    $F\P052-Bold.afm \
+    $F\P052-Bold.t1 \
+    $F\P052-BoldItalic.afm \
+    $F\P052-BoldItalic.t1 \
+    $F\P052-Italic.afm \
+    $F\P052-Italic.t1 \
+    $F\P052-Roman.afm \
+    $F\P052-Roman.t1 \
+    $F\StandardSymbolsPS.afm \
+    $F\StandardSymbolsPS.t1 \
+    $F\URWBookman-Demi.afm \
+    $F\URWBookman-Demi.t1 \
+    $F\URWBookman-DemiItalic.afm \
+    $F\URWBookman-DemiItalic.t1 \
+    $F\URWBookman-Light.afm \
+    $F\URWBookman-Light.t1 \
+    $F\URWBookman-LightItalic.afm \
+    $F\URWBookman-LightItalic.t1 \
+    $F\URWGothic-Book.afm \
+    $F\URWGothic-Book.t1 \
+    $F\URWGothic-BookOblique.afm \
+    $F\URWGothic-BookOblique.t1 \
+    $F\URWGothic-Demi.afm \
+    $F\URWGothic-Demi.t1 \
+    $F\URWGothic-DemiOblique.afm \
+    $F\URWGothic-DemiOblique.t1 \
+    $F\Z003-MediumItalic.afm \
+    $F\Z003-MediumItalic.t1
+!ENDIF
+
+!IF 0
+# Use the TrueType files
 FONTS=$F\C059-BdIta.ttf \
     $F\C059-Bold.ttf \
     $F\C059-Italic.ttf \
@@ -70,8 +145,10 @@ FONTS=$F\C059-BdIta.ttf \
     $F\URWGothic-Demi.ttf \
     $F\URWGothic-DemiOblique.ttf \
     $F\Z003-MediumItalic.ttf
+!ENDIF
 
 all:: $(FONTS)
+    @echo $(FONTS)
 
 download:: $(_ZIP)
 
@@ -94,6 +171,19 @@ $(_ZIP):
 !ENDIF
 !ENDIF
 
+# I tend to avoid implicit rules, preferring instead explicit rules.
+# However, they work well in this situation.
+
+.SUFFIXES:
+.SUFFIXES: .afm .pfb
+
+{$(_D)}.afm{$F}.afm:
+    copy /y $< $@
+
+{$(_D)}.afm{$F}.t1:
+    copy /y $< $@
+
+!IF 0
 $F\C059-BdIta.ttf: $(_D)\$(@F)
     copy $(_D)\$(@F) $@
 $F\C059-Bold.ttf: $(_D)\$(@F)
@@ -164,6 +254,7 @@ $F\URWGothic-DemiOblique.ttf: $(_D)\$(@F)
     copy $(_D)\$(@F) $@
 $F\Z003-MediumItalic.ttf: $(_D)\$(@F)
     copy $(_D)\$(@F) $@
+!ENDIF
 
 # These targets aren't all necessary - one should be sufficient
 # for the extration. However listing them all explicitly allows
